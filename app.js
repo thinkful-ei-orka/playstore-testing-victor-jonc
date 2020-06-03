@@ -6,10 +6,10 @@ const app = express();
 app.use(morgan('common'));
 
 app.get('/apps', (req, res) => {
-  const { app = '', sort, genre = '' } = req.query;
+  const { app = '', sort = '', genre = '' } = req.query;
 
   if (sort) {
-    if (!['App', 'rating'].includes(sort)) {
+    if (!['App', 'Rating'].includes(sort)) {
       return res.status(400).send('Sort must be one of App or rating');
     }
   }
@@ -27,9 +27,14 @@ app.get('/apps', (req, res) => {
     );
   }
 
-  if (sort) {
+  if (sort === 'Rating') {
     results.sort((a, b) => {
-      return a[rating] > b[rating] ? 1 : a[rating] < b[rating] ? -1 : 0;
+      return a['Rating'] > b['Rating'] ? -1 : a['Rating'] < b['Rating'] ? 1 : 0;
+    });
+  }
+  if (sort === 'App') {
+    results.sort((a, b) => {
+      return a['App'] > b['App'] ? -1 : a['App'] < b['App'] ? 1 : 0;
     });
   }
 
